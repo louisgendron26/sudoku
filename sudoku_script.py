@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 import math
+import sudoku_class as sc
 
 # ----------------------------- Quelques fonctions utilitaires pour le jeu de sudoku ---------------------------------
 
@@ -71,19 +72,20 @@ def add_to_grid(num,row,col,grid):
         grid[row][col] = int(num)
     return grid
 
-#--------------------------------------------------- AIMA CODE ---------------------------------------------------------
-
-
-
+def count_zero (grid) :
+    count=0
+    for x in grid:
+        for y in x:
+            if y == 0:
+                count+=1
+    return count
 
 
 
 def main (argument):
     grid = str_to_grid("200060000007004086000001300000000040090000000480000710900078000000050002020600501")
-    print(grid)
-    print(eval_possibility(0,1,grid))
-    new_grid = add_to_grid(1,0,1,grid)
-    print(new_grid)
+    new_grid = sc.Sudoku("200060000007004086000001300000000040090000000480000710900078000000050002020600501")
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
