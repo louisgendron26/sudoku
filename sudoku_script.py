@@ -51,7 +51,6 @@ def check_square(num,row,col,grid):
 #Retourne la liste des possibilites pour un case
 def eval_possibility(row,col,grid):
     if grid[row][col] != 0 :
-        print("ERROR : no possiblities, this cell already contain a value")
         return []
 
     possible = [1,2,3,4,5,6,7,8,9]
@@ -84,7 +83,9 @@ def count_zero (grid) :
 
 def main (argument):
     grid = str_to_grid("200060000007004086000001300000000040090000000480000710900078000000050002020600501")
-    new_grid = sc.Sudoku("200060000007004086000001300000000040090000000480000710900078000000050002020600501")
+    new_grid = sc.Sudoku(initial="200060000007004086000001300000000040090000000480000710900078000000050002020600501")
+
+    print(new_grid.actions(new_grid.initial))
 
 
 if __name__ == '__main__':
