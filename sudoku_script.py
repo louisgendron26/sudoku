@@ -36,7 +36,7 @@ def get_square(row,col,grid):
 
 #Verification de conflit dans un carre 3x3
 def check_square(num,row,col,grid):
-    if row ==0 | col == 0:
+    if row == 0 | col == 0:
         print("rows and column must be between 1 and 9")
         return 0
 
@@ -65,9 +65,25 @@ def eval_possibility(row,col,grid):
 
     return possible
 
+def add_to_grid(num,row,col,grid):
+
+    if check_square(num,row,col,grid) & check_line(num,row,col,grid):
+        grid[row][col] = int(num)
+    return grid
+
+#--------------------------------------------------- AIMA CODE ---------------------------------------------------------
+
+
+
+
+
+
 def main (argument):
     grid = str_to_grid("200060000007004086000001300000000040090000000480000710900078000000050002020600501")
     print(grid)
+    print(eval_possibility(0,1,grid))
+    new_grid = add_to_grid(1,0,1,grid)
+    print(new_grid)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
