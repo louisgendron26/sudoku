@@ -7,7 +7,7 @@ class Case:
         self.fixed = fixed
 
     def set_val(self, new_value):
-        if not self.fixed AND new_value in range(0,10):
+        if not self.fixed and new_value in range(0,10):
             self.value = new_value
 
     def set_x(self, new_x):
