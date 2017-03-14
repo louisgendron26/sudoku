@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 class Case:
-    def __init__(self, value, x, y, fixed):
+    def __init__(self, value, x, y, fixed = False):
         self.value = value
         self.x = x
         self.y = y
-        self.fixed = False
+        self.fixed = fixed
 
     def set_val(self, new_value):
         if not self.fixed & new_value in range(0,10):
