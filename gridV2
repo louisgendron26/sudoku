@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import numpy
 import case
+import math
 
 class GridV2():
     def __init__(self):
@@ -8,11 +9,54 @@ class GridV2():
         self.grid = grid
 
     def g_print(self):
-        print(self.grid)
+        grid_value = list()
+        for x in range(9):
+            for y in range(9):
+                grid_value.append(self.grid[x][y].get_val())
+        result = numpy.array(grid_value)
+        result = result.reshape(9,9)
+        print(result)
+
+    #Checking conflict for horizontal and vertical
+    def check_line(self, num, x, y):
+
+        #Getting values for h horizontal
+        values = list()
+        for i in range(9):
+            values.append(self.grid[x][i].get_val())
+
+        #Getting values for the vertical
+        for j in range(9):
+            values.append(self.grid[j][y].get_val())
+
+        #Looking for duplicate
+        if num in values:
+            return 0
+        else:
+            return 1
+
+    #Checking for conflict in a 3x3 square
+    def check_square(self, num, x, y):
+
+        if self.grid[x][y].get_val() != 0:
+            return 0
+
+        x_square = 3*math.floor((x) / 3)
+        y_square = 3*math.floor((y) / 3)
+        square_val = list()
+
+        for i in range(x_square, x_square+3):
+            for j in range(y_square, y_square+3):
+                square_val.append(self.grid[i][j].get_val())
+
+        if num in square_val:
+            return 0
+        else:
+            return 1
 
     def case_val(self, x, y):
         case = self.grid[x][y]
         return case.get_val()
-    #EN COURS
+
     def set_case(self, num, x ,y):
-        return
+        self.grid[x][y].set_val(num)
