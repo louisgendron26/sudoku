@@ -9,7 +9,6 @@ class Case:
     def set_val(self, new_value):
         if not self.fixed AND new_value in range(0,10):
             self.value = new_value
-            return self
 
     def set_x(self, new_x):
         if new_x in range(0, 9):
