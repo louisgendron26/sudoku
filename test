@@ -1,0 +1,39 @@
+import unittest
+import Sudoku
+import Grid
+import numpy as np
+import Case
+
+#-------CASE-------#
+#class CaseTest(unittest.TestCase):
+#    def setUp(self):
+#        self.case = Case.Case(1,2, False)
+#-------GRID-------#
+
+class GridTest(unittest.TestCase):
+    def setUp(self):
+        self.grid = Grid.Grid("200060000007004"
+                    "0860000013000000"
+                    "0004009000000048"
+                    "00007109000780000"
+                    "00050002020600501")
+
+        print (self.grid.grid)
+
+    def test_check_line(self):
+        self.assertEqual(self.grid.check_line(2, 0, 0), 0) #Meme Case
+        self.assertEqual(self.grid.check_line(2, 0, 4), 0)  # Meme Ligne
+        self.assertEqual(self.grid.check_line(2, 5, 0), 0)  # Meme Colone
+        self.assertEqual(self.grid.check_line(2, 1, 4), 1) #Bonne position
+
+    """
+    def test_get_square(self):
+        self.assertEqual(self.grid.get_square(0,4).flatten().tolist(), np.array([[0,6,0],[0,0,4],[0,0,1]]).flatten().tolist())
+
+    def test_check_square(self):
+        self.assertEqual(self.grid.check_line(2, 0, 3), 0)  # Meme Carree
+        self.assertEqual(self.grid.check_line(2, 1, 4), 1)  # Bonne position"""
+
+
+
+
