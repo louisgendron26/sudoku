@@ -8,12 +8,20 @@ import random
 import Sudoku
 
 class Grid:
-    def __init__(self, grid):
+
+    def __init__(self, grid, fixing=None):
 
         if type(grid) is str:
             self.grid = np.array([[Case.Case(0, row, col) if int(grid[row * 9 + col]) == 0 else Case.Case(
                 int(grid[row * 9 + col]), row, col, True)
                                    for col in range(9)] for row in range(9)])
+            if fixing is not None:
+                self.fixing = fixing
+                for row in range(9):
+                    for col in range(9):
+                        if int(fixing[row * 9 + col]) == 0:
+                            self.grid[row][col].unfix()
+
         elif type(grid) is np.ndarray:
             self.grid = grid
         else:
@@ -73,8 +81,10 @@ class Grid:
 
     # Retourne la liste des possibilites pour un case
     def eval_possibility(self, row, col):
-        if self.grid[row][col].fixed:
+
+        if self.grid[row][col].get_val() != 0:
             return []
+
         possible = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         sub_grid = self.get_square(row, col)
 
@@ -87,15 +97,17 @@ class Grid:
             col_val += [case.get_val()]
 
         all_val = sub_grid_val + row_val + col_val
+        # print("ALL VAL : ", all_val)
         for item in all_val:
             if item in possible:
                 possible.remove(item)
         return possible
 
     def add_to_grid(self, num, row, col):
-        new_grid = Grid(self.grid)
+        string = self.to_string()
+        new_grid = Grid(string[0], string[1])
         if self.check_square(num, row, col) and self.check_line(num, row, col):
-            new_grid.grid[row, col].set_val(num)
+            new_grid.grid[row][col].set_val(num)
         return new_grid
 
     def count_zero(self):
@@ -115,7 +127,8 @@ class Grid:
 
     def to_string(self):
         grid_values = [str(self.grid[x][y].get_val()) for x in range(9) for y in range(9)]
-        return "".join(grid_values)
+        fixed_values = [str(int(self.grid[x][y].fixed)) for x in range(9) for y in range(9)]
+        return "".join(grid_values), "".join(fixed_values)
 
 #-------------------------------------------------- Hill Climbing-----------------------------------------------
 
@@ -142,28 +155,25 @@ class Grid:
     def scan_grid(self):
         total = 0
         for x in range(9):
-            total += self.hc_check_row(x)
-            total += self.hc_check_row(x)
+            total += self.hc_check_row(x) + self.hc_check_col(x)
         return total
 
     # Return a list of permutations for non-fixed case
     def get_permut(self):
-        print("TARGET")
-        print(self.grid[1][1].is_fixed())
         result = []
         base = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         base1 = [0, 1, 2]
         base2 = [3, 4, 5]
         base3 = [6, 7, 8]
-        z=1000
+        z=200
         while(z>0):
 
             z-=1
             i = random.choice(base)
             j = random.choice(base)
-            if self.grid[i][j].is_fixed():
+            if int(self.fixing[i * 9 + j]) != 0:
                 continue
-            #Finding the square of the cell
+            #Finding the squar e of the cell
             x_square = math.floor(i/3)
             y_square = math.floor(j/3)
 
@@ -182,19 +192,18 @@ class Grid:
             else:
                 l = random.choice(base3)
 
-            if self.grid[k][l].is_fixed():
+            if int(self.fixing[k * 9 + l]) != 0:
                 continue
 
             if i==k and j == l :
                 continue
             #The action 5434 switch the value of cell 5,4 with cell 3,4
             result.append(str(i) + str(j) + str(k) + str (l))
-        print(len(result))
         return result
 
     def apply_permut(self, str):
         new_grid_str = self.to_string()
-        str_list = list(new_grid_str)
+        str_list = list(new_grid_str[0])
         permutation = list(str)
         cell_1 = 9*int(permutation[0])+int(permutation[1])
         cell_2 = 9*int(permutation[2])+int(permutation[3])
@@ -204,22 +213,10 @@ class Grid:
         str_list[cell_2] = val_1
         final = "".join(str_list)
 
-        return Grid(final)
-        # new_grid = Grid(self.grid)
-        # print("2 : ", new_grid.g_print())
-        #
-        # permut = list(str)
-        # cell_1 = new_grid.case_val(int(permut[0]), int(permut[1]))
-        # cell_2 = new_grid.case_val(int(permut[2]), int(permut[3]))
-        #
-        # new_grid.set_case(cell_1, int(permut[2]), int(permut[3]))
-        # new_grid.set_case(cell_2, int(permut[0]), int(permut[1]))
-        #
-        # print("3 : ", new_grid.g_print())
-        # return new_grid
+        return Grid(final, fixing=self.fixing)
 
     def hc_fill_grid(self):
-        new_grid = Grid(self.grid)
+        new_grid = Grid(self.grid,fixing=self.fixing)
         base = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         #Looping on the 9 square
         for i in range(3):
