@@ -1,0 +1,41 @@
+import Grid
+import Case
+import Sudoku
+import Node
+
+
+def hill_climbing(problem):
+    """From the initial node, keep choosing the neighbor with highest value,
+    stopping when no neighbor is better. [Figure 4.2]"""
+    current = Node.Node(problem.initial)
+    print(current.state.g_print())
+    print(current.state.scan_grid())
+    while True:
+
+        neighbors = current.expand(problem, True)
+        if not neighbors:
+            break
+
+        values = [problem.value(x.state) for x in neighbors]
+        minimum = min(values)
+        neighbor = neighbors[values.index(minimum)]
+
+        if current.state.scan_grid() < neighbor.state.scan_grid():
+            break
+        print(neighbor.state.scan_grid())
+        current = neighbor
+    print(current.state.g_print())
+    print(current.state.scan_grid())
+    print(current.path_cost)
+    return current.state
+
+def main():
+
+    sudoku = Sudoku.Sudoku("200060000007004086000001300000000040090000000480000710900078000000050002020600501")
+    sudoku.initial.hc_fill_grid()
+    result = hill_climbing(sudoku)
+
+
+
+if __name__ == '__main__':
+    main()
