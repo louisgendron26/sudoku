@@ -25,14 +25,19 @@ class Node:
     def __lt__(self, node):
         return self.state < node.state
 
-    def expand(self, problem):
+    def expand(self, problem, hc=False):
         "List the nodes reachable in one step from this node."
-        return [self.child_node(problem, action)
-                for action in problem.actions(self.state)]
 
-    def child_node(self, problem, action):
-        "[Figure 3.10]"
-        next = problem.result(self.state, action)
+        return [self.child_node(problem, action, hc)
+            for action in problem.actions(self.state, hc)]
+
+
+
+    def child_node(self, problem, action, hc = False):
+        if hc:
+            next = problem.result(self.state, action, True)
+        else:
+            next = problem.result(self.state, action)
         return Node(next, self, action,
                     problem.path_cost(self.path_cost, self.state,
                                       action, next))
@@ -59,3 +64,4 @@ class Node:
 
     def __hash__(self):
         return hash(self.state)
+
