@@ -1,0 +1,38 @@
+import Sudoku
+import HillClimbing
+import HC_simulee
+import statistics as stats
+def main():
+
+    with open("100sudoku.txt") as f:
+        content = f.readlines()
+        sudoku_configs = [x.strip() for x in content]
+    hc_cost = list()
+    hc_best_value = list()
+
+    hcS_cost = list()
+    hcS_best_value = list()
+
+    for config in sudoku_configs:
+        sudoku = Sudoku.Sudoku(config)
+        sudoku.initial.hc_fill_grid()
+        hc = HillClimbing.hill_climbing(sudoku)
+        hc_best_value.append(int(hc.state.scan_grid()))
+        hc_cost.append(sudoku.step)
+
+        sudoku = Sudoku.Sudoku(config)
+        sudoku.initial.hc_fill_grid()
+        hcS = HC_simulee.simulated_annealing(sudoku)
+        hcS_cost.append(sudoku.step)
+        hcS_best_value.append(int(hcS.state.scan_grid()))
+        print("Done {}".format(config))
+
+    with open ("result_sudoku.txt", "w") as result_file:
+        result_file.write("Hill Climbing average best value {} \n".format(stats.mean(hc_best_value)))
+        result_file.write("Hill Climbing average node explored {} \n".format(stats.mean(hc_cost)))
+        result_file.write("Simulated annealing average best value {}\n".format(stats.mean(hcS_best_value)))
+        result_file.write("Simulated annealing average node explored {}\n".format(stats.mean(hcS_cost)))
+
+    print("Finish")
+if __name__ == '__main__':
+    main()
