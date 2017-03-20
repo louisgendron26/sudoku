@@ -5,17 +5,10 @@ import Grid
 
 class Sudoku(Problem):
 
-    """The abstract class for a formal problem.  You should subclass
-    this and implement the methods actions and result, and possibly
-    __init__, goal_test, and path_cost. Then you will create instances
-    of your subclass and solve them with the various search functions."""
-
     def __init__(self, initial, goal=None):
-        """The constructor specifies the initial state, and possibly a goal
-        state, if there is a unique goal.  Your subclass's constructor can add
-        other arguments."""
         self.initial = Grid.Grid(initial, fixing=initial)
         self.goal = goal
+        self.step = 0
 
     def actions(self, state, hc=False):
         #if hc is True, the result is a list of permutations
@@ -34,9 +27,6 @@ class Sudoku(Problem):
             return result
 
     def result(self, state, action, hc=False):
-        """Return the state that results from executing the given
-        action in the given state. The action must be one of
-        self.actions(state)."""
         if hc:
             next_state = state.apply_permut(action)
         else:
@@ -44,7 +34,6 @@ class Sudoku(Problem):
         return next_state
 
     def goal_test(self, state):
-
         goal = True
         print(state.grid)
         for x in range (0,9):
@@ -56,9 +45,9 @@ class Sudoku(Problem):
                     goal = False
                     break
         return goal
+
     def path_cost(self, c, state1, action, state2):
         return c + 1
 
     def value(self, state):
         return state.scan_grid()
-
