@@ -1,6 +1,4 @@
-import Grid
 import sys
-import Sudoku
 import Node
 import math
 import random
@@ -10,14 +8,14 @@ def probability(p):
     return p > random.uniform(0.0, 1.0)
 
 def cooling(t):
-    if t < 0.0001:
+    if t < 0.001:
         return 0
     else:
         return 0.99 * t
 
 
 def simulated_annealing(problem):
-    T=3 # initial temperature
+    T=3# initial temperature
     current = Node.Node(problem.initial)
     for t in range(sys.maxsize):
         T = cooling(T)
@@ -30,16 +28,6 @@ def simulated_annealing(problem):
         delta_e = problem.value(current.state) - problem.value(next.state)
         if delta_e > 0 or probability(math.exp(delta_e / T)):
             current = next
-        print(current.state.scan_grid())
+            problem.step += 1
 
-def main():
-
-    sudoku = Sudoku.Sudoku("200060000007004086000001300000000040090000000480000710900078000000050002020600501")
-    sudoku.initial.hc_fill_grid()
-    result = simulated_annealing(sudoku)
-    print(result.state.g_print())
-    print(result.state.scan_grid())
-    print(result.path_cost)
-
-if __name__ == '__main__':
-    main()
+    return current
